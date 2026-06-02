@@ -22,13 +22,10 @@
 <main>
   <section id="loginPanel" class="painel" style="display:block">
     <h2>Entrar como admin</h2>
+    <p class="muted">Login local para evitar o erro de CORS do Supabase Auth.</p>
     <div class="row">
       <div class="medium">
-        <label>E-mail</label>
-        <input id="email" type="email">
-      </div>
-      <div class="medium">
-        <label>Senha</label>
+        <label>Senha do admin</label>
         <input id="password" type="password">
       </div>
       <button id="loginBtn">Entrar</button>
@@ -50,46 +47,22 @@
       <div class="painel">
         <h2>Cadastrar/editar questão</h2>
         <input id="qid" type="hidden">
-
         <div class="grid3">
-          <div>
-            <label>Número original</label>
-            <input id="number_original" placeholder="Ex.: 31">
-          </div>
-          <div>
-            <label>Origem</label>
-            <input id="prova_origem" placeholder="Ex.: ENADE 2025 Tipo 1">
-          </div>
-          <div>
-            <label>Disciplina/Tema</label>
-            <input id="disciplina" placeholder="Ex.: Didática">
-          </div>
+          <div><label>Número original</label><input id="number_original" placeholder="Ex.: 31"></div>
+          <div><label>Origem</label><input id="prova_origem" placeholder="Ex.: ENADE 2025 Tipo 1"></div>
+          <div><label>Disciplina/Tema</label><input id="disciplina" placeholder="Ex.: Didática"></div>
         </div>
-
         <label>URL da imagem recortada</label>
         <input id="image_url" placeholder="questoes/tipo1_q031.png">
-
         <label>Descrição curta para localizar</label>
-        <textarea id="enunciado" placeholder="Ex.: Questão sobre avaliação formativa. Pode ser só um resumo, pois o aluno verá a imagem."></textarea>
-
+        <textarea id="enunciado"></textarea>
         <div class="row">
           <div class="small">
             <label>Gabarito</label>
-            <select id="correct_answer">
-              <option>A</option>
-              <option>B</option>
-              <option>C</option>
-              <option>D</option>
-            </select>
+            <select id="correct_answer"><option>A</option><option>B</option><option>C</option><option>D</option></select>
           </div>
-
           <label><input id="is_anulada" type="checkbox" style="width:auto"> Questão anulada</label>
-
-          <div class="medium">
-            <label>Tags</label>
-            <input id="tags" placeholder="BNCC, avaliação">
-          </div>
-
+          <div class="medium"><label>Tags</label><input id="tags" placeholder="BNCC, avaliação"></div>
           <button id="saveQuestion">Salvar questão</button>
           <button class="secondary" id="newQuestion">Nova/limpar</button>
         </div>
@@ -97,9 +70,6 @@
 
       <div class="painel">
         <h2>Importar JSON do recortador</h2>
-        <p class="muted">
-          Cole aqui o JSON gerado pelo recortador. As imagens precisam estar na pasta <code>questoes/</code> do GitHub, ou em URLs públicas.
-        </p>
         <textarea id="jsonImport"></textarea>
         <button id="importBtn">Importar JSON</button>
       </div>
@@ -115,38 +85,19 @@
     <section id="examsSec" class="section">
       <div class="painel">
         <h2>Montar novo simulado</h2>
-
         <div class="grid3">
-          <div>
-            <label>Título</label>
-            <input id="examTitle">
-          </div>
-          <div>
-            <label>Disciplina/Tema</label>
-            <input id="examDisc">
-          </div>
-          <div>
-            <label>Duração em minutos</label>
-            <input id="examDuration" type="number" value="240">
-          </div>
+          <div><label>Título</label><input id="examTitle"></div>
+          <div><label>Disciplina/Tema</label><input id="examDisc"></div>
+          <div><label>Duração em minutos</label><input id="examDuration" type="number" value="240"></div>
         </div>
-
-        <label>Descrição</label>
-        <textarea id="examDesc"></textarea>
-
+        <label>Descrição</label><textarea id="examDesc"></textarea>
         <label><input id="examActive" type="checkbox" checked style="width:auto"> Publicar como ativo</label>
-
         <h3>Selecionar questões</h3>
         <input id="pickerFilter" placeholder="Filtrar questões para selecionar">
         <div id="picker" style="margin-top:12px"></div>
-
         <button id="createExam" class="success">Criar simulado com as questões selecionadas</button>
       </div>
-
-      <div class="painel">
-        <h2>Simulados criados</h2>
-        <div id="examList"></div>
-      </div>
+      <div class="painel"><h2>Simulados criados</h2><div id="examList"></div></div>
     </section>
 
     <section id="resultsSec" class="section">

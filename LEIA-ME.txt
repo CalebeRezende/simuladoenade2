@@ -1,17 +1,13 @@
-Arquivos faltantes para subir na raiz do repositório simuladoenade2.
+PATCH ADMIN SEM SUPABASE AUTH
 
-Suba estes arquivos no GitHub:
-- index.html
-- admin.html
-- config.js
+O console mostrou CORS exatamente na rota /auth/v1/token. Este patch evita o Supabase Auth no painel admin.
 
-Eles precisam ficar no mesmo nível de:
-- cropper.html
-- README.md
-- assets/
-- questoes/
-- tools/
+Como usar:
+1. Suba admin.html, config.js e assets/admin.js para o GitHub, substituindo os atuais.
+2. No config.js, cole sua chave anon public que começa com eyJ no lugar indicado.
+3. Troque window.ADMIN_PASSWORD para uma senha sua.
+4. No Supabase > SQL Editor, rode patch_policies_admin_sem_auth.sql.
+5. Entre no admin usando apenas a senha definida em config.js.
 
-Depois aguarde o GitHub Pages atualizar e acesse:
-https://caleberezende.github.io/simuladoenade2/
-https://caleberezende.github.io/simuladoenade2/admin.html
+Observação:
+Esta é uma solução prática para GitHub Pages sem backend. A senha local fica no código publicado, então não é segurança forte.
