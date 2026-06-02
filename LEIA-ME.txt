@@ -1,0 +1,17 @@
+Arquivos faltantes para subir na raiz do repositório simuladoenade2.
+
+Suba estes arquivos no GitHub:
+- index.html
+- admin.html
+- config.js
+
+Eles precisam ficar no mesmo nível de:
+- cropper.html
+- README.md
+- assets/
+- questoes/
+- tools/
+
+Depois aguarde o GitHub Pages atualizar e acesse:
+https://caleberezende.github.io/simuladoenade2/
+https://caleberezende.github.io/simuladoenade2/admin.html

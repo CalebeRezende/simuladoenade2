@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Simulados por questões recortadas</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <h1>Simulados ENADE/PND — questões recortadas</h1>
+    <div class="timer" id="timer">--:--:--</div>
+    <div class="actions noPrint">
+      <a class="btnlink secondary" href="admin.html">Acesso admin</a>
+      <a class="btnlink secondary" href="cropper.html">Recortador</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="examChooser" class="painel">
+    <h2>Escolha um simulado</h2>
+    <p class="muted">
+      O aluno vê apenas as questões selecionadas pelo professor, preservando a imagem recortada do PDF original.
+    </p>
+    <div id="examList"></div>
+  </section>
+
+  <section id="studentPanel" class="painel">
+    <h2>Identificação</h2>
+    <div id="setup" class="hide">
+      <h3 id="selectedTitle"></h3>
+      <div class="row">
+        <div class="medium">
+          <label>Nome</label>
+          <input id="studentName" placeholder="Digite seu nome">
+        </div>
+        <div class="medium">
+          <label>E-mail, opcional</label>
+          <input id="studentEmail" type="email" placeholder="email@exemplo.com">
+        </div>
+        <button id="startBtn" class="success">Começar simulado</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="examArea" class="painel hide">
+    <div class="qhead">
+      <div>
+        <h2 id="examTitle"></h2>
+        <span class="pill" id="qCount"></span>
+      </div>
+      <div class="actions noPrint">
+        <button class="success" id="submitBtn">Finalizar e corrigir</button>
+        <button class="secondary" id="printBtn">Imprimir</button>
+      </div>
+    </div>
+
+    <div id="saveStatus"></div>
+    <div id="resultado" class="resultado"></div>
+    <div id="questions"></div>
+  </section>
+</main>
+
+<script type="module" src="assets/app.js"></script>
+</body>
+</html>
