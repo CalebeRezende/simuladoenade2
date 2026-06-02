@@ -1,220 +1,348 @@
-import { EXAMS } from "./exams_static.js";
-
-const el = id => document.getElementById(id);
-const esc = s => String(s ?? "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-
-let currentExam = null;
-let answers = {};
-let startedAt = null;
-let submitted = false;
-let timer = null;
-
-function fmtDur(sec) {
-  const h = Math.floor(sec / 3600);
-  const m = Math.floor((sec % 3600) / 60);
-  const s = sec % 60;
-  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-}
-
-function clock(ms) {
-  const t = Math.max(0, Math.ceil(ms / 1000));
-  return fmtDur(t);
-}
-
-function left() {
-  return Math.max(0, (currentExam.duration_minutes || 240) * 60000 - (Date.now() - startedAt));
-}
-
-function tick() {
-  const l = left();
-  el("timer").textContent = clock(l);
-  if (l <= 0 && !submitted) submitExam(true);
-}
-
-function loadExams() {
-  el("examList").innerHTML = EXAMS.map(ex => `
-    <div class="examCard" data-id="${esc(ex.id)}">
-      <div class="qhead">
-        <h3>${esc(ex.title)}</h3>
-        <span class="pill">${ex.duration_minutes || 240} min</span>
-      </div>
-      <p>${esc(ex.description || "")}</p>
-      <span class="tag">${ex.questions.length} questões</span>
-    </div>
-  `).join("");
-
-  document.querySelectorAll(".examCard").forEach(card => {
-    card.onclick = () => selectExam(card.dataset.id);
-  });
-}
-
-function selectExam(id) {
-  currentExam = EXAMS.find(e => e.id === id);
-  el("selectedTitle").textContent = currentExam.title;
-  el("setup").classList.remove("hide");
-  el("studentPanel").scrollIntoView({ behavior: "smooth" });
-}
-
-function startExam() {
-  const name = el("studentName").value.trim();
-  if (!name) {
-    alert("Digite seu nome para começar.");
-    return;
+export const EXAMS = [
+  {
+    "id": "avaliacao",
+    "title": "Avaliação — Simulado por questões selecionadas",
+    "description": "Questões: 10, 11, 17, 18, 24, 25, 27, 28, 50, 56, 57, 58, 59, 62, 63 e 64.",
+    "duration_minutes": 240,
+    "questions": [
+      {
+        "id": "avaliacao_q10_1",
+        "number_original": "10",
+        "image_url": "questoes/prova_q010.png",
+        "correct_answer": "D",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q11_2",
+        "number_original": "11",
+        "image_url": "questoes/prova_q011.png",
+        "correct_answer": "A",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q17_3",
+        "number_original": "17",
+        "image_url": "questoes/prova_q017.png",
+        "correct_answer": "A",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q18_4",
+        "number_original": "18",
+        "image_url": "questoes/prova_q018.png",
+        "correct_answer": "A",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q24_5",
+        "number_original": "24",
+        "image_url": "questoes/prova_q024.png",
+        "correct_answer": "C",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q25_6",
+        "number_original": "25",
+        "image_url": "questoes/prova_q025.png",
+        "correct_answer": "A",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q27_7",
+        "number_original": "27",
+        "image_url": "questoes/prova_q027.png",
+        "correct_answer": "B",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q28_8",
+        "number_original": "28",
+        "image_url": "questoes/prova_q028.png",
+        "correct_answer": "B",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q50_9",
+        "number_original": "50",
+        "image_url": "questoes/prova_q050.png",
+        "correct_answer": "B",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q56_10",
+        "number_original": "56",
+        "image_url": "questoes/prova_q056.png",
+        "correct_answer": "C",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q57_11",
+        "number_original": "57",
+        "image_url": "questoes/prova_q057.png",
+        "correct_answer": "C",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q58_12",
+        "number_original": "58",
+        "image_url": "questoes/prova_q058.png",
+        "correct_answer": "A",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q59_13",
+        "number_original": "59",
+        "image_url": "questoes/prova_q059.png",
+        "correct_answer": "D",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q62_14",
+        "number_original": "62",
+        "image_url": "questoes/prova_q062.png",
+        "correct_answer": "A",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q63_15",
+        "number_original": "63",
+        "image_url": "questoes/prova_q063.png",
+        "correct_answer": "C",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "avaliacao_q64_16",
+        "number_original": "64",
+        "image_url": "questoes/prova_q064.png",
+        "correct_answer": "A",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      }
+    ]
+  },
+  {
+    "id": "e1",
+    "title": "E1 — Simulado por questões selecionadas",
+    "description": "Questões: 7, 14, 16, 19, 26, 29, 30, 51, 52, 23, 54, 55, 60, 61, 65, 66 e 67.",
+    "duration_minutes": 240,
+    "questions": [
+      {
+        "id": "e1_q7_1",
+        "number_original": "7",
+        "image_url": "questoes/prova_q007.png",
+        "correct_answer": "B",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q14_2",
+        "number_original": "14",
+        "image_url": "questoes/prova_q014.png",
+        "correct_answer": "B",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q16_3",
+        "number_original": "16",
+        "image_url": "questoes/prova_q016.png",
+        "correct_answer": "C",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q19_4",
+        "number_original": "19",
+        "image_url": "questoes/prova_q019.png",
+        "correct_answer": "C",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q26_5",
+        "number_original": "26",
+        "image_url": "questoes/prova_q026.png",
+        "correct_answer": "D",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q29_6",
+        "number_original": "29",
+        "image_url": "questoes/prova_q029.png",
+        "correct_answer": "B",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q30_7",
+        "number_original": "30",
+        "image_url": "questoes/prova_q030.png",
+        "correct_answer": "A",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q51_8",
+        "number_original": "51",
+        "image_url": "questoes/prova_q051.png",
+        "correct_answer": "B",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q52_9",
+        "number_original": "52",
+        "image_url": "questoes/prova_q052.png",
+        "correct_answer": "A",
+        "is_anulada": true,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q23_10",
+        "number_original": "23",
+        "image_url": "questoes/prova_q023.png",
+        "correct_answer": "A",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q54_11",
+        "number_original": "54",
+        "image_url": "questoes/prova_q054.png",
+        "correct_answer": "B",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q55_12",
+        "number_original": "55",
+        "image_url": "questoes/prova_q055.png",
+        "correct_answer": "D",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q60_13",
+        "number_original": "60",
+        "image_url": "questoes/prova_q060.png",
+        "correct_answer": "B",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q61_14",
+        "number_original": "61",
+        "image_url": "questoes/prova_q061.png",
+        "correct_answer": "C",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q65_15",
+        "number_original": "65",
+        "image_url": "questoes/prova_q065.png",
+        "correct_answer": "B",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q66_16",
+        "number_original": "66",
+        "image_url": "questoes/prova_q066.png",
+        "correct_answer": "A",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      },
+      {
+        "id": "e1_q67_17",
+        "number_original": "67",
+        "image_url": "questoes/prova_q067.png",
+        "correct_answer": "D",
+        "is_anulada": false,
+        "disciplina": "",
+        "prova_origem": "ENADE/PND 2025 Pedagogia",
+        "enunciado": ""
+      }
+    ]
   }
-
-  answers = {};
-  startedAt = Date.now();
-  submitted = false;
-
-  el("examChooser").classList.add("hide");
-  el("setup").classList.add("hide");
-  el("examArea").classList.remove("hide");
-  el("resultado").style.display = "none";
-  el("saveStatus").innerHTML = "";
-  el("examTitle").textContent = currentExam.title;
-  el("qCount").textContent = `${currentExam.questions.length} questões`;
-
-  renderQuestions(false);
-  clearInterval(timer);
-  tick();
-  timer = setInterval(tick, 1000);
-}
-
-function renderQuestions(lock) {
-  el("questions").innerHTML = currentExam.questions.map((q, idx) => {
-    const img = q.image_url
-      ? `<img class="question-img" src="${esc(q.image_url)}" alt="Questão ${idx + 1}">`
-      : `<div class="alerta warn">Imagem não encontrada para a questão ${esc(q.number_original)}.</div>`;
-
-    const opts = ["A","B","C","D"].map(letter => `
-      <label class="alt">
-        <input type="radio" name="q_${idx}" value="${letter}" ${answers[idx] === letter ? "checked" : ""} ${lock || q.is_anulada ? "disabled" : ""}>
-        ${letter}
-      </label>
-    `).join("");
-
-    return `
-      <article class="qcard" id="card_${idx}">
-        <div class="qhead">
-          <div>
-            <span class="pill">Questão ${idx + 1}</span>
-            ${q.disciplina ? `<span class="tag">${esc(q.disciplina)}</span>` : ""}
-            ${q.prova_origem ? `<span class="tag">${esc(q.prova_origem)}</span>` : ""}
-          </div>
-          <span class="muted">Original: ${esc(q.number_original)}</span>
-        </div>
-        ${img}
-        <div>${opts}</div>
-        ${q.is_anulada ? `<p class="muted"><b>Questão anulada:</b> conta como acerto automaticamente.</p>` : ""}
-      </article>
-    `;
-  }).join("");
-
-  document.querySelectorAll("input[type=radio]").forEach(input => {
-    input.onchange = e => {
-      answers[e.target.name.replace("q_", "")] = e.target.value;
-      localStorage.setItem("simulado_respostas_temp", JSON.stringify(answers));
-    };
-  });
-}
-
-function score() {
-  let correct = 0, wrong = 0, blank = 0, anuladas = 0;
-  const details = [];
-
-  currentExam.questions.forEach((q, idx) => {
-    const selected = answers[idx] || "";
-    let status = "wrong";
-
-    if (q.is_anulada) {
-      correct++;
-      anuladas++;
-      status = "auto";
-    } else if (!selected) {
-      blank++;
-      status = "blank";
-    } else if (selected === q.correct_answer) {
-      correct++;
-      status = "correct";
-    } else {
-      wrong++;
-    }
-
-    details.push({
-      position: idx + 1,
-      original: q.number_original,
-      selected,
-      correct_answer: q.correct_answer,
-      status
-    });
-  });
-
-  return {
-    correct, wrong, blank, anuladas, details,
-    total: currentExam.questions.length,
-    percentual: Number(((correct / currentExam.questions.length) * 100).toFixed(2))
-  };
-}
-
-function submitExam(auto = false) {
-  if (submitted) return;
-  if (!auto && !confirm("Finalizar e corrigir agora? Depois disso as respostas serão bloqueadas.")) return;
-
-  submitted = true;
-  clearInterval(timer);
-
-  const s = score();
-  const dur = Math.round((Date.now() - startedAt) / 1000);
-
-  renderQuestions(true);
-
-  s.details.forEach((d, idx) => {
-    const card = el("card_" + idx);
-    if (card) card.style.borderColor = (d.status === "correct" || d.status === "auto") ? "#abefc6" : "#fecdca";
-  });
-
-  const resultRecord = {
-    nome: el("studentName").value.trim(),
-    email: el("studentEmail").value.trim(),
-    simulado: currentExam.title,
-    nota: `${s.correct} de ${s.total}`,
-    percentual: s.percentual,
-    duracao: fmtDur(dur),
-    respostas: answers,
-    correcao: s.details,
-    enviado_em: new Date().toISOString()
-  };
-
-  const old = JSON.parse(localStorage.getItem("resultados_simulados") || "[]");
-  old.push(resultRecord);
-  localStorage.setItem("resultados_simulados", JSON.stringify(old));
-
-  el("resultado").style.display = "block";
-  el("resultado").innerHTML = `
-    <h2>Resultado</h2>
-    <div class="score">${s.correct} de ${s.total}</div>
-    <p>${s.percentual}% de aproveitamento. Duração: ${fmtDur(dur)}</p>
-    <div class="grid3">
-      <div class="kpi">Acertos<strong>${s.correct}</strong></div>
-      <div class="kpi">Erros<strong>${s.wrong}</strong></div>
-      <div class="kpi">Em branco<strong>${s.blank}</strong></div>
-    </div>
-    <div class="alerta" style="margin-top:12px">
-      Resultado salvo neste navegador. Para registrar em banco/e-mail, será preciso reativar envio externo depois.
-    </div>
-  `;
-
-  el("submitBtn").disabled = true;
-  el("resultado").scrollIntoView({ behavior: "smooth" });
-}
-
-function restart() {
-  location.reload();
-}
-
-el("startBtn").onclick = startExam;
-el("submitBtn").onclick = () => submitExam(false);
-el("printBtn").onclick = () => window.print();
-el("restartBtn").onclick = restart;
-
-loadExams();
+];
