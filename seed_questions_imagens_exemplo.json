@@ -1,0 +1,15 @@
+[
+  {
+    "number_original": "31",
+    "prova_origem": "ENADE/PND 2025 Pedagogia Tipo 1",
+    "disciplina": "Didática",
+    "enunciado": "Resumo opcional para o professor localizar a questão.",
+    "image_url": "questoes/tipo1_q031.png",
+    "correct_answer": "A",
+    "is_anulada": false,
+    "tags": [
+      "didática",
+      "currículo"
+    ]
+  }
+]
